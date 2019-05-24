@@ -11,22 +11,44 @@ describe 'mongodb::default' do
     let(:chef_run) do
       # for a complete list of available platforms and versions see:
       # https://github.com/customink/fauxhai/blob/master/PLATFORMS.md
-      runner = ChefSpec::ServerRunner.new(platform: 'ubuntu', version: '16.04')
+      runner = ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '16.04')
       runner.converge(described_recipe)
     end
 
     it 'converges successfully' do
       expect { chef_run }.to_not raise_error
     end
-    it "should install mongodb from a recipe" do
-      expect(chef_run).to include_recipe("mongodb")
+    #
+    it 'updates all sources' do
+      expect(chef_run).to update_apt_update 'update'
     end
-    it 'should enable mongodb' do
-      expect(chef_run).to enable_service "mongodb"
+
+    it 'should create a proxy.conf template in /data/configdb' do
+      expect(chef_run).to create_template("/data/configdb/mongod.conf")
     end
-    it 'should start service mongodb' do
-      expect(chef_run).to start_service "mongodb"
+
+    it 'should create a proxy.conf template in /data/configdb' do
+      expect(chef_run).to create_template("/data/configdb/mongod.service")
     end
+
+    it 'should add mongo to the sources list' do
+      expect(chef_run).to add_apt_repository 'mongodb-org'
+    end
+
+    it 'should upgrade mongod' do
+      expect(chef_run).to upgrade_package 'mongodb-org'
+    end
+    it 'should install mongod' do
+      expect(chef_run).to install_package 'mongodb-org'
+    end
+    it 'should enable mongod' do
+      expect(chef_run).to enable_service "mongodb-org"
+    end
+    it 'should start mongod service' do
+      expect(chef_run).to start_service "mongodb-org"
+    end
+    at_exit { ChefSpec::Coverage.report! }
+
   end
 
 
