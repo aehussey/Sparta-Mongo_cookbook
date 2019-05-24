@@ -42,10 +42,10 @@ describe 'mongodb::default' do
       expect(chef_run).to install_package 'mongodb-org'
     end
     it 'should enable mongod' do
-      expect(chef_run).to enable_service "mongodb-org"
+      expect(chef_run).to enable_service "mongod"
     end
     it 'should start mongod service' do
-      expect(chef_run).to start_service "mongodb-org"
+      expect(chef_run).to start_service "mongod"
     end
     at_exit { ChefSpec::Coverage.report! }
 

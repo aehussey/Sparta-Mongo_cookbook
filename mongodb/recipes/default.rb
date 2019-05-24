@@ -17,7 +17,7 @@ apt_repository 'mongodb-org' do
 end
 
 package 'mongodb-org' do
-  action [:upgrade]
+  action [:upgrade, :install]
 end
 
 template '/lib/systemd/system/mongod.service' do
