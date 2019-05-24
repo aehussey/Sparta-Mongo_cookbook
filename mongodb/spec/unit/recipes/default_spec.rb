@@ -24,11 +24,11 @@ describe 'mongodb::default' do
     end
 
     it 'should create a proxy.conf template in /data/configdb' do
-      expect(chef_run).to create_template("/data/configdb/mongod.conf")
+      expect(chef_run).to create_template("/data/configdb/mongod.conf").with_variables(proxy_port: 27017)
     end
 
     it 'should create a proxy.conf template in /data/configdb' do
-      expect(chef_run).to create_template("/data/configdb/mongod.service")
+      expect(chef_run).to create_template("/data/configdb/mongod.service").with_variables(proxy_port: 27017)
     end
 
     it 'should add mongo to the sources list' do

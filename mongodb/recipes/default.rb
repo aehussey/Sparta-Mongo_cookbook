@@ -19,19 +19,19 @@ end
 template '/data/configdb/mongod.service' do
   source 'mongod.service.erb'
   variables proxy_port: 27017
-  # notifies :restart, 'service[nginx]'
+  notifies :restart, 'service[mongodb-org]'
 end
 
 template '/data/configdb/mongod.conf' do
   source 'mongod.conf.erb'
   variables proxy_port: 27017
-  # notifies :restart, 'service[nginx]'
+  notifies :restart, 'service[mongodb-org]'
 end
-#
+
 package 'mongodb-org' do
   action [:upgrade, :install]
 end
 
-service 'mongodb-org' do
-  action [:enable, :start]
-end
+# service 'mongodb-org' do
+#   action [:unmask, :enable, :start]
+# end
