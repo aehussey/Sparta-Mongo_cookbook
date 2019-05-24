@@ -16,22 +16,36 @@ apt_repository 'mongodb-org' do
   key 'EA312927'
 end
 
-template '/data/configdb/mongod.service' do
+package 'mongodb-org' do
+  action [:upgrade]
+end
+
+template '/lib/systemd/system/mongod.service' do
   source 'mongod.service.erb'
   variables proxy_port: 27017
-  notifies :restart, 'service[mongodb-org]'
+  owner "root"
+  group "root"
+  mode 0755
+
+  notifies :restart, 'service[mongod]'
 end
 
-template '/data/configdb/mongod.conf' do
+template '/etc/mongod.conf' do
   source 'mongod.conf.erb'
+  # node['mongo']['ip_adresses']
+  owner "root"
+  group "root"
+  mode 0755
   variables proxy_port: 27017
-  notifies :restart, 'service[mongodb-org]'
+
+  notifies :restart, 'service[mongod]'
 end
 
-package 'mongodb-org' do
-  action [:upgrade, :install]
-end
 
-# service 'mongodb-org' do
-#   action [:unmask, :enable, :start]
-# end
+
+
+
+service 'mongod' do
+  supports status: true, restart: true, reload: true
+  action [:enable, :start]
+end

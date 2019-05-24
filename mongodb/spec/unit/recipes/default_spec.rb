@@ -23,12 +23,12 @@ describe 'mongodb::default' do
       expect(chef_run).to update_apt_update 'update'
     end
 
-    it 'should create a proxy.conf template in /data/configdb' do
-      expect(chef_run).to create_template("/data/configdb/mongod.conf").with_variables(proxy_port: 27017)
+    it 'should create a mongod.conf template in /etc/' do
+      expect(chef_run).to create_template("/etc/mongod.conf").with_variables(proxy_port: 27017)
     end
 
-    it 'should create a proxy.conf template in /data/configdb' do
-      expect(chef_run).to create_template("/data/configdb/mongod.service").with_variables(proxy_port: 27017)
+    it 'should create a mongod.service template in /lib/systemd/system/' do
+      expect(chef_run).to create_template("/lib/systemd/system/mongod.service").with_variables(proxy_port: 27017)
     end
 
     it 'should add mongo to the sources list' do
